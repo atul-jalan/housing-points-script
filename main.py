@@ -93,15 +93,8 @@ with open('Housing Form.csv', newline='') as csvfile:
 
         missedCandEvent = float(row[27]) * -1 # number of candidate events missed - up to -6 pts
         tempPoints += missedCandEvent
-        print (tempPoints)
+
         scores [row[2]] += (tempPoints / 27) * 18
-
-
-
-        
-        scores [row[2]] += (tempPoints / 65) * 18
-        tempPoints = 0
-
 
     sortedScores = {k: v for k, v in sorted(scores.items(), reverse=True, key=lambda item: item[1])}  
 
