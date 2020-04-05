@@ -1,18 +1,28 @@
 import csv
 
 scores = {}
+notLivingIn = []
 
 with open('Housing Form.csv', newline='') as csvfile:
     csvreader = csv.reader(csvfile, delimiter = ',')
 
     x = 0
     for row in csvreader:
+
+        if row[4] == 'No': # does/doesn't want to live in the house
+            notLivingIn.append(row[2])
+            continue
+
         if x == 0:
             x = 1
             continue
 
+        print (row[2])
         scores[row[2]] = 0
         tempPoints = 0
+
+        if row[2] == 'Ray Tsao' or row[2] == 'Jake Freeman': # kids with special circumstances
+            continue
 
         # Grade Level
         if row[5] == 'Junior':
@@ -21,7 +31,8 @@ with open('Housing Form.csv', newline='') as csvfile:
             tempPoints += 30
         
         # scores for each student are updated by dividing points earned by total possible points for the section and multiplying by the section's weight in the final score
-        scores [row[2]] += (tempPoints / 30) * 19 
+        scores [row[2]] += (tempPoints / 30) * 10
+        print ("Grade :", (tempPoints / 30) * 10 * 10 )
         tempPoints = 0
 
         # GPA
@@ -33,7 +44,8 @@ with open('Housing Form.csv', newline='') as csvfile:
             elif row[x] == '3.0 - 3.5': # GPA is 3.0 - 3.5
                 tempPoints += 2
         
-        scores [row[2]] += (tempPoints / 18) * 13.5
+        scores [row[2]] += (tempPoints / 18) * 10
+        print ("GPA :", (tempPoints / 18) * 10 * 10 )
         tempPoints = 0
 
         # Positions Held
@@ -53,6 +65,7 @@ with open('Housing Form.csv', newline='') as csvfile:
             tempPoints += 10
         
         scores [row[2]] += (tempPoints / 65) * 18
+        print ("Positions Held :", (tempPoints / 65) * 18 * 10)
         tempPoints = 0
 
         # Service
@@ -63,7 +76,8 @@ with open('Housing Form.csv', newline='') as csvfile:
         tempPoints += float(row[17]) * 5 # num times opened room for party
         tempPoints += float(row[18]) * 25 # formal RM shifts
 
-        scores [row[2]] += (tempPoints / 217) * 18
+        scores [row[2]] += (tempPoints / 217) * 21.5
+        print ("Service :", (tempPoints / 217) * 21.5 * 10)
         tempPoints = 0
 
         # Volunteering 
@@ -71,15 +85,16 @@ with open('Housing Form.csv', newline='') as csvfile:
         tempPoints += float(row[20]) * 4 # number of IM teams participated in - can claim up to 5
 
         dmMoney = float(row[22]) * (1/16) # amount raised for DM - up to 40 pts
-        if dmMoney > 40:
-            tempPoints += 40
+        if dmMoney > 20:
+            tempPoints += 20
         else:
             tempPoints += dmMoney
 
         tempPoints += float(row[23]) * (5/2) # number of sigma nuggets tickets sold - can claim up to 6
-        tempPoints += float(row[28]) * 5 # number of big/little taks completed - can claim up to 3
+        tempPoints += float(row[28]) * 10 # number of big/little taks completed - can claim up to 3
 
-        scores [row[2]] += (tempPoints / 110) * 13.5
+        scores [row[2]] += (tempPoints / 105) * 13.5
+        print ("Volunteering :", (tempPoints / 105) * 13.5 * 10)
         tempPoints = 0
         
         # Attendance
@@ -95,10 +110,22 @@ with open('Housing Form.csv', newline='') as csvfile:
         tempPoints += missedCandEvent
 
         scores [row[2]] += (tempPoints / 27) * 18
+        print ("Attendance :", (tempPoints / 27) * 18 * 10)
+        print ("")
 
     sortedScores = {k: v for k, v in sorted(scores.items(), reverse=True, key=lambda item: item[1])}  
 
+    x = 1
     for score in sortedScores:
-        print (score, ":", round(sortedScores[score] * 10))
+        if x == 33:
+            print ('---------------CUTOFF---------------')
+        print (x, ".", score, ":", round(sortedScores[score] * 10))
+        x += 1
+    
+
+    print ('\n\nNOT LIVING IN:')
+    for person in notLivingIn:
+        print (person)
+
 
     
